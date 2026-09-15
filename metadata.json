@@ -1,0 +1,6 @@
+{
+  "name": "艺路同行 - 语障人士艺术疗愈共享平台",
+  "description": "专为语障人士打造的无声艺术疗愈与创作共鸣社区。让画笔代替言语，让色彩在无声中共鸣。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
