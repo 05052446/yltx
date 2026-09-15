@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * Universal Asset URL helper for GitHub Pages and relative subpath deployments.
- * Resolves './images/...' to appropriate Vite base or fallback SVG data URI.
+ * Resolves './images/...' to appropriate Vite base or fallback paths.
  */
 
 // Elegant fallback SVG placeholders in case an image fails to load
@@ -41,7 +41,6 @@ export function resolveAssetUrl(url?: string, type: 'artwork' | 'avatar' | 'cove
 
   // If it's a stale external URL from previous mock data, convert to local image if possible
   if (url.includes('images.unsplash.com') || url.includes('api.dicebear.com')) {
-    // Return appropriate fallback
     return type === 'avatar' ? FALLBACK_AVATAR_SVG : FALLBACK_ARTWORK_SVG;
   }
 
@@ -64,12 +63,47 @@ export function resolveAssetUrl(url?: string, type: 'artwork' | 'avatar' | 'cove
 }
 
 /**
- * Handle img onError event cleanly
+ * Handle img onError event cleanly with multi-tier fallback:
+ * 1. If failed on baseUrl + images/art-x.jpg, try raw github or sibling path
+ * 2. If still fails, fall back to SVG placeholder
  */
-export function handleImageError(e: React.SyntheticEvent<HTMLImageElement, Event>, type: 'artwork' | 'avatar' | 'cover' = 'artwork') {
+export function handleImageError(
+  e: React.SyntheticEvent<HTMLImageElement, Event>,
+  type: 'artwork' | 'avatar' | 'cover' = 'artwork'
+) {
   const target = e.currentTarget;
-  const fallback = type === 'avatar' ? FALLBACK_AVATAR_SVG : FALLBACK_ARTWORK_SVG;
-  if (target.src !== fallback) {
-    target.src = fallback;
+  const fallbackSvg = type === 'avatar' ? FALLBACK_AVATAR_SVG : FALLBACK_ARTWORK_SVG;
+  const currentSrc = target.src || '';
+
+  // Check if we can retry from public/ or root images/ or raw git
+  const retryCount = parseInt(target.getAttribute('data-retry') || '0', 10);
+
+  if (retryCount === 0) {
+    target.setAttribute('data-retry', '1');
+    // If the image was requested without /public/ prefix or failed on relative base, try raw githubusercontent fallback
+    const match = currentSrc.match(/(art-\d+\.jpg|art-preset-\d+\.jpg|video-\d+\.jpg|workshop-\d+\.jpg|avatar-[a-z0-9-]+\.svg)/i);
+    if (match) {
+      const fileName = match[1];
+      // Try loading from GitHub repo direct raw path as first fallback before SVG
+      target.src = `https://raw.githubusercontent.com/05052446/yltx/main/images/${fileName}`;
+      return;
+    }
+  }
+
+  if (retryCount === 1) {
+    target.setAttribute('data-retry', '2');
+    const match = currentSrc.match(/(art-\d+\.jpg|art-preset-\d+\.jpg|video-\d+\.jpg|workshop-\d+\.jpg|avatar-[a-z0-9-]+\.svg)/i);
+    if (match) {
+      const fileName = match[1];
+      // Also try public/images if available
+      target.src = `https://raw.githubusercontent.com/05052446/yltx/main/public/images/${fileName}`;
+      return;
+    }
+  }
+
+  // Final fallback: SVG placeholder
+  if (target.src !== fallbackSvg) {
+    target.src = fallbackSvg;
   }
 }
+
