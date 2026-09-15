@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES, EMOTION_TAGS } from '../data/mockData';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   X, 
   Upload, 
@@ -190,8 +191,9 @@ export const ArtworkUploadModal: React.FC = () => {
             {imageUrl ? (
               <div className="relative rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 max-h-64 flex items-center justify-center group">
                 <img
-                  src={imageUrl}
+                  src={resolveAssetUrl(imageUrl, 'artwork')}
                   alt="Preview"
+                  onError={(e) => handleImageError(e, 'artwork')}
                   className="w-full h-64 object-contain"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">

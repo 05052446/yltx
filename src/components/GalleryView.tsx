@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES, EMOTION_TAGS } from '../data/mockData';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   Heart, 
   Eye, 
@@ -185,9 +186,10 @@ export const GalleryView: React.FC = () => {
               {/* Image with subtle overlay */}
               <div className="relative overflow-hidden bg-stone-100">
                 <img
-                  src={art.imageUrl}
+                  src={resolveAssetUrl(art.imageUrl, 'artwork')}
                   alt={art.title}
                   loading="lazy"
+                  onError={(e) => handleImageError(e, 'artwork')}
                   className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
                 />
 
@@ -226,8 +228,9 @@ export const GalleryView: React.FC = () => {
                 <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 min-w-0 pr-2">
                     <img
-                      src={art.artist.avatar}
+                      src={resolveAssetUrl(art.artist.avatar, 'avatar')}
                       alt={art.artist.name}
+                      onError={(e) => handleImageError(e, 'avatar')}
                       className="w-5 h-5 sm:w-6 sm:h-6 rounded-full ring-1 ring-stone-200 shrink-0"
                     />
                     <div className="flex flex-col min-w-0">

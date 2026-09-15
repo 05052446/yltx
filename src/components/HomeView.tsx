@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { EMOTION_TAGS } from '../data/mockData';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -185,9 +186,10 @@ export const HomeView: React.FC = () => {
               {/* Image container */}
               <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
                 <img
-                  src={art.imageUrl}
+                  src={resolveAssetUrl(art.imageUrl, 'artwork')}
                   alt={art.title}
                   loading="lazy"
+                  onError={(e) => handleImageError(e, 'artwork')}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-white text-[11px]">
@@ -214,8 +216,9 @@ export const HomeView: React.FC = () => {
                 <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <img
-                      src={art.artist.avatar}
+                      src={resolveAssetUrl(art.artist.avatar, 'avatar')}
                       alt={art.artist.name}
+                      onError={(e) => handleImageError(e, 'avatar')}
                       className="w-6 h-6 rounded-full ring-1 ring-stone-200"
                     />
                     <div className="flex flex-col">
@@ -260,9 +263,10 @@ export const HomeView: React.FC = () => {
                 <div>
                   <div className="relative aspect-[16/9] overflow-hidden bg-stone-100">
                     <img
-                      src={event.imageUrl}
+                      src={resolveAssetUrl(event.imageUrl, 'artwork')}
                       alt={event.title}
                       loading="lazy"
+                      onError={(e) => handleImageError(e, 'artwork')}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 text-stone-800 shadow-xs">

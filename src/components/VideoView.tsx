@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { VideoCourse } from '../types';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   Play, 
   Clock, 
@@ -113,9 +114,10 @@ export const VideoView: React.FC = () => {
               {/* Cover with Play Icon */}
               <div className="relative aspect-[16/9] overflow-hidden bg-stone-900">
                 <img
-                  src={video.coverUrl}
+                  src={resolveAssetUrl(video.coverUrl, 'artwork')}
                   alt={video.title}
                   loading="lazy"
+                  onError={(e) => handleImageError(e, 'artwork')}
                   className="w-full h-full object-cover opacity-90 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
                 />
 
@@ -172,8 +174,9 @@ export const VideoView: React.FC = () => {
             <div className="px-5 py-3.5 bg-stone-50/70 border-t border-stone-100 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <img
-                  src={video.instructor.avatar}
+                  src={resolveAssetUrl(video.instructor.avatar, 'avatar')}
                   alt={video.instructor.name}
+                  onError={(e) => handleImageError(e, 'avatar')}
                   className="w-8 h-8 rounded-full ring-1 ring-stone-200"
                 />
                 <div className="flex flex-col">
@@ -224,8 +227,9 @@ export const VideoView: React.FC = () => {
             {/* Video Stage (Simulated Canvas / Video Player) */}
             <div className="relative aspect-[16/9] w-full bg-black flex items-center justify-center overflow-hidden">
               <img
-                src={selectedVideoModal.coverUrl}
+                src={resolveAssetUrl(selectedVideoModal.coverUrl, 'artwork')}
                 alt="Stage"
+                onError={(e) => handleImageError(e, 'artwork')}
                 className="w-full h-full object-cover opacity-60"
               />
 

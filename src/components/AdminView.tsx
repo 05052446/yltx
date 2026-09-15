@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   ShieldCheck, 
   Users, 
@@ -318,8 +319,9 @@ export const AdminView: React.FC = () => {
                   <tr key={art.id} className="hover:bg-stone-50/80 transition-colors">
                     <td className="p-3">
                       <img
-                        src={art.imageUrl}
+                        src={resolveAssetUrl(art.imageUrl, 'artwork')}
                         alt={art.title}
+                        onError={(e) => handleImageError(e, 'artwork')}
                         className="w-12 h-12 object-cover rounded-xl border border-stone-200"
                       />
                     </td>

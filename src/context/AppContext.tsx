@@ -79,11 +79,34 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  ARTWORKS: 'yilu_artworks_v1',
-  PLAZA_POSTS: 'yilu_plaza_posts_v1',
-  EVENTS: 'yilu_events_v1',
-  ROLE: 'yilu_user_role_v1'
+  ARTWORKS: 'yilu_artworks_v2',
+  PLAZA_POSTS: 'yilu_plaza_posts_v2',
+  EVENTS: 'yilu_events_v2',
+  ROLE: 'yilu_user_role_v2'
 };
+
+// Helper to migrate and normalize image URLs from legacy storage
+function sanitizeArtwork(art: Artwork): Artwork {
+  let img = art.imageUrl;
+  if (!img || img.includes('images.unsplash.com') || img.startsWith('/')) {
+    // Look up original in INITIAL_ARTWORKS or convert
+    const original = INITIAL_ARTWORKS.find((a) => a.id === art.id);
+    img = original ? original.imageUrl : './images/art-1.jpg';
+  }
+  let avatar = art.artist?.avatar;
+  if (!avatar || avatar.includes('dicebear.com') || avatar.startsWith('/')) {
+    const original = INITIAL_ARTWORKS.find((a) => a.id === art.id);
+    avatar = original?.artist?.avatar || './images/avatar-default.svg';
+  }
+  return {
+    ...art,
+    imageUrl: img,
+    artist: {
+      ...art.artist,
+      avatar
+    }
+  };
+}
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeTab, setActiveTab] = useState<AppTab>('home');
@@ -95,8 +118,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Artworks state with localStorage
   const [artworks, setArtworks] = useState<Artwork[]>(() => {
     try {
+      // Clear legacy v1 keys that might hold broken external urls
+      if (localStorage.getItem('yilu_artworks_v1')) {
+        localStorage.removeItem('yilu_artworks_v1');
+      }
+      if (localStorage.getItem('yilu_plaza_posts_v1')) {
+        localStorage.removeItem('yilu_plaza_posts_v1');
+      }
+      if (localStorage.getItem('yilu_events_v1')) {
+        localStorage.removeItem('yilu_events_v1');
+      }
+
       const saved = localStorage.getItem(STORAGE_KEYS.ARTWORKS);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed: Artwork[] = JSON.parse(saved);
+        return parsed.map(sanitizeArtwork);
+      }
     } catch (e) {
       console.error('Failed to load artworks from storage:', e);
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   X, 
   Heart, 
@@ -85,8 +86,9 @@ export const ArtworkDetailModal: React.FC = () => {
         {/* Left Column: Big Artwork Visual */}
         <div className="w-full md:w-1/2 lg:w-3/5 bg-stone-950 flex flex-col justify-center items-center relative min-h-[300px] md:min-h-[550px] p-4 sm:p-8">
           <img
-            src={artwork.imageUrl}
+            src={resolveAssetUrl(artwork.imageUrl, 'artwork')}
             alt={artwork.title}
+            onError={(e) => handleImageError(e, 'artwork')}
             className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl shadow-2xl"
           />
 
@@ -118,8 +120,9 @@ export const ArtworkDetailModal: React.FC = () => {
             <div className="flex items-center justify-between pb-4 border-b border-stone-100">
               <div className="flex items-center gap-3">
                 <img
-                  src={artwork.artist.avatar}
+                  src={resolveAssetUrl(artwork.artist.avatar, 'avatar')}
                   alt={artwork.artist.name}
+                  onError={(e) => handleImageError(e, 'avatar')}
                   className="w-11 h-11 rounded-full ring-2 ring-emerald-100 object-cover"
                 />
                 <div className="flex flex-col">
@@ -209,8 +212,9 @@ export const ArtworkDetailModal: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <img
-                          src={cmt.authorAvatar}
+                          src={resolveAssetUrl(cmt.authorAvatar, 'avatar')}
                           alt={cmt.authorName}
+                          onError={(e) => handleImageError(e, 'avatar')}
                           className="w-5 h-5 rounded-full object-cover"
                         />
                         <span className="text-xs font-semibold text-stone-800">{cmt.authorName}</span>

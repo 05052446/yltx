@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { AppTab } from '../types';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   Palette, 
   Home, 
@@ -99,8 +100,8 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Search Box */}
-          <div className="hidden md:flex items-center relative flex-1 max-w-xs lg:max-w-sm">
-            <Search className="w-4 h-4 absolute left-3 text-stone-600 pointer-events-none" />
+          <div className="hidden md:flex items-center relative flex-1 min-w-[200px] max-w-xs lg:max-w-sm">
+            <Search className="w-4 h-4 absolute left-3.5 text-stone-600 pointer-events-none" />
             <input
               id="global-search-input"
               type="text"
@@ -112,12 +113,12 @@ export const Navbar: React.FC = () => {
                   setActiveTab('gallery');
                 }
               }}
-              className="w-full pl-9 pr-4 py-1.5 bg-stone-100/90 hover:bg-stone-100 focus:bg-white border border-stone-200 rounded-full text-xs text-stone-800 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              className="w-full pl-10 pr-8 py-2 bg-stone-100/90 hover:bg-stone-100 focus:bg-white border border-stone-200 rounded-full text-xs text-stone-800 placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all leading-normal"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 text-xs text-stone-600 hover:text-stone-600"
+                className="absolute right-3 text-xs text-stone-600 hover:text-stone-600"
                 aria-label="清空搜索"
               >
                 ✕
@@ -150,12 +151,14 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <img
-                src={
+                src={resolveAssetUrl(
                   currentRole === 'admin'
                     ? './images/avatar-adminteacher.svg'
-                    : './images/avatar-chenlin.svg'
-                }
+                    : './images/avatar-chenlin.svg',
+                  'avatar'
+                )}
                 alt="Avatar"
+                onError={(e) => handleImageError(e, 'avatar')}
                 className="w-5 h-5 rounded-full ring-1 ring-stone-200"
               />
               <span className="text-[11px]">

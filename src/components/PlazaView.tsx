@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { resolveAssetUrl, handleImageError } from '../utils/assetHelper';
 import { 
   MessageSquareHeart, 
   Send, 
@@ -111,12 +112,14 @@ export const PlazaView: React.FC = () => {
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200/90 shadow-xs space-y-4">
         <div className="flex items-center gap-3">
           <img
-            src={
+            src={resolveAssetUrl(
               currentRole === 'admin'
                 ? './images/avatar-adminteacher.svg'
-                : './images/avatar-chenlin.svg'
-            }
+                : './images/avatar-chenlin.svg',
+              'avatar'
+            )}
             alt="Current User"
+            onError={(e) => handleImageError(e, 'avatar')}
             className="w-9 h-9 rounded-full ring-2 ring-emerald-100"
           />
           <div className="flex flex-col">
@@ -141,7 +144,12 @@ export const PlazaView: React.FC = () => {
           {/* Attached image preview */}
           {attachedImage && (
             <div className="relative inline-block rounded-xl overflow-hidden border border-stone-200 max-w-xs">
-              <img src={attachedImage} alt="Attachment" className="h-32 w-auto object-cover" />
+              <img 
+                src={resolveAssetUrl(attachedImage, 'artwork')} 
+                alt="Attachment" 
+                onError={(e) => handleImageError(e, 'artwork')}
+                className="h-32 w-auto object-cover" 
+              />
               <button
                 type="button"
                 onClick={() => setAttachedImage('')}
@@ -160,8 +168,9 @@ export const PlazaView: React.FC = () => {
                 {sampleQuickImages.map((imgUrl, idx) => (
                   <img
                     key={idx}
-                    src={imgUrl}
+                    src={resolveAssetUrl(imgUrl, 'artwork')}
                     alt="Quick preview"
+                    onError={(e) => handleImageError(e, 'artwork')}
                     onClick={() => {
                       setAttachedImage(imgUrl);
                       setShowImagePicker(false);
@@ -256,8 +265,9 @@ export const PlazaView: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
-                  src={post.author.avatar}
+                  src={resolveAssetUrl(post.author.avatar, 'avatar')}
                   alt={post.author.name}
+                  onError={(e) => handleImageError(e, 'avatar')}
                   className="w-10 h-10 rounded-full ring-1 ring-stone-200"
                 />
                 <div>
@@ -296,9 +306,10 @@ export const PlazaView: React.FC = () => {
                 {post.images.map((img, idx) => (
                   <div key={idx} className="aspect-video sm:aspect-square rounded-2xl overflow-hidden bg-stone-100 border border-stone-200">
                     <img
-                      src={img}
+                      src={resolveAssetUrl(img, 'artwork')}
                       alt="Post attachment"
                       loading="lazy"
+                      onError={(e) => handleImageError(e, 'artwork')}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
@@ -378,7 +389,12 @@ export const PlazaView: React.FC = () => {
                   <div className="space-y-2">
                     {post.comments.map((cmt) => (
                       <div key={cmt.id} className="flex items-start gap-2.5 text-xs bg-white p-2.5 rounded-xl border border-stone-200/60">
-                        <img src={cmt.authorAvatar} alt="cmt author" className="w-5 h-5 rounded-full mt-0.5" />
+                        <img 
+                          src={resolveAssetUrl(cmt.authorAvatar, 'avatar')} 
+                          alt="cmt author" 
+                          onError={(e) => handleImageError(e, 'avatar')}
+                          className="w-5 h-5 rounded-full mt-0.5" 
+                        />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-stone-800">{cmt.authorName}</span>
