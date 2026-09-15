@@ -59,26 +59,26 @@ export const Navbar: React.FC = () => {
             onClick={() => handleTabClick('home')}
             className="flex items-center gap-2.5 cursor-pointer group shrink-0"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-amber-400 p-0.5 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-amber-400 p-0.5 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center">
               <div className="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                <Palette className="w-5 h-5 text-emerald-700 group-hover:rotate-12 transition-transform" />
+                <Palette className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-700 group-hover:rotate-12 transition-transform" />
               </div>
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-stone-900 font-serif">艺路同行</span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-stone-900 font-serif">艺路同行</span>
+                <span className="hidden xl:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                   <Sparkles className="w-2.5 h-2.5 mr-0.5" /> 挑战杯示范项目
                 </span>
               </div>
-              <span className="text-[11px] text-stone-600 font-medium tracking-wide">
+              <span className="hidden sm:inline text-[11px] text-stone-600 font-medium tracking-wide">
                 语障人士艺术疗愈共享平台
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-stone-100/80 p-1 rounded-2xl border border-stone-200/60">
+          <nav className="hidden lg:flex items-center gap-1 bg-stone-100/80 p-1 rounded-2xl border border-stone-200/60 shrink-0">
             {navItems.map((item) => {
               const isActive = activeTab === item.tab;
               return (
@@ -86,7 +86,7 @@ export const Navbar: React.FC = () => {
                   key={item.tab}
                   id={`nav-link-${item.tab}`}
                   onClick={() => handleTabClick(item.tab)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
                     isActive
                       ? 'bg-white text-emerald-800 shadow-sm'
                       : 'text-stone-600 hover:text-stone-950 hover:bg-stone-200/50'
@@ -99,41 +99,41 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Search Box */}
-          <div className="hidden md:flex items-center relative flex-1 min-w-[180px] max-w-xs lg:max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 text-stone-500 pointer-events-none" />
-            <input
-              id="global-search-input"
-              type="text"
-              placeholder="搜索作品、作者、情绪..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                if (activeTab === 'home' && e.target.value.trim().length > 0) {
-                  setActiveTab('gallery');
-                }
-              }}
-              className="w-full pl-9 pr-7 py-1.5 bg-stone-100/90 hover:bg-stone-100 focus:bg-white border border-stone-200 rounded-full text-xs text-stone-800 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all leading-normal"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 text-xs text-stone-400 hover:text-stone-700"
-                aria-label="清空搜索"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
+          {/* Action Buttons & Search */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             
+            {/* Search Box - Responsive width */}
+            <div className="hidden 2xl:flex items-center relative w-44 shrink-0">
+              <Search className="w-3.5 h-3.5 absolute left-3 text-stone-400 pointer-events-none" />
+              <input
+                id="global-search-input"
+                type="text"
+                placeholder="搜索作品、情绪..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (activeTab === 'home' && e.target.value.trim().length > 0) {
+                    setActiveTab('gallery');
+                  }
+                }}
+                className="w-full pl-8 pr-7 py-1.5 bg-stone-100/90 hover:bg-stone-100 focus:bg-white border border-stone-200 rounded-full text-xs text-stone-800 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all leading-normal"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 text-xs text-stone-400 hover:text-stone-700"
+                  aria-label="清空搜索"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
             {/* Quick Upload CTA */}
             <button
               id="btn-quick-upload-artwork"
               onClick={() => setIsUploadModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm hover:shadow transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm hover:shadow transition-all active:scale-95 whitespace-nowrap"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>发布作品</span>
@@ -144,7 +144,7 @@ export const Navbar: React.FC = () => {
               id="btn-toggle-user-role"
               onClick={toggleRole}
               title="切换创作者视角 / 管理员答辩演示模式"
-              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-medium transition-all ${
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs font-medium transition-all whitespace-nowrap ${
                 currentRole === 'admin'
                   ? 'bg-amber-50 border-amber-300 text-amber-900 shadow-sm'
                   : 'bg-white border-stone-200 text-stone-700 hover:bg-stone-50'
@@ -159,12 +159,12 @@ export const Navbar: React.FC = () => {
                 )}
                 alt="Avatar"
                 onError={(e) => handleImageError(e, 'avatar')}
-                className="w-5 h-5 rounded-full ring-1 ring-stone-200"
+                className="w-5 h-5 rounded-full ring-1 ring-stone-200 shrink-0"
               />
-              <span className="text-[11px]">
-                {currentRole === 'admin' ? '评审专家视角' : '创作者：林晨'}
+              <span className="text-[11px] whitespace-nowrap">
+                {currentRole === 'admin' ? '评审专家' : '创作者：林晨'}
               </span>
-              <UserCheck className="w-3 h-3 text-emerald-600" />
+              <UserCheck className="w-3 h-3 text-emerald-600 shrink-0" />
             </button>
 
             {/* Reset Data for defense test */}
@@ -172,7 +172,7 @@ export const Navbar: React.FC = () => {
               id="btn-reset-demo-data"
               onClick={resetDemoData}
               title="答辩一键重置初始数据"
-              className="hidden xl:flex items-center justify-center w-8 h-8 rounded-full text-stone-600 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+              className="hidden sm:flex items-center justify-center w-7 h-7 rounded-full text-stone-500 hover:text-stone-700 hover:bg-stone-100 transition-colors shrink-0"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
